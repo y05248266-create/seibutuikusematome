@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生物育成の技術 スライド型デジタル教材 | 中学校技術科</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e20;
+            --primary-light: #e8f5e9;
+            --secondary: #0288d1;
+            --accent: #f57c00;
+            --bg-color: #111827;
+            --slide-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --radius: 16px;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", MeiYo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header Navigation */
+        header {
+            background-color: #1f2937;
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #374151;
+            flex-shrink: 0;
+        }
+
+        .site-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .site-badge {
+            background-color: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            border-radius: 12px;
+        }
+
+        .progress-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+
+        .progress-bar-container {
+            width: 160px;
+            height: 8px;
+            background-color: #374151;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #10b981;
+            width: 10%;
+            transition: width 0.3s ease;
+        }
+
+        .slide-counter {
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* Slide Stage Area */
+        .stage {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            height: 100%;
+            max-height: 640px;
+            background-color: var(--slide-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: none;
+            flex-direction: column;
+            padding: 36px 44px;
+            position: relative;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .slide-wrapper.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Slide Header */
+        .slide-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 14px;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .slide-tag {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: bold;
+            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .slide-title {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slide-body {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .lead-text {
+            font-size: 1.05rem;
+            color: #374151;
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+
+        /* Layout Elements */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .info-card {
+            background-color: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 20px;
+        }
+
+        .info-card.green {
+            background-color: var(--primary-light);
+            border-color: #a7f3d0;
+        }
+
+        .info-card.blue {
+            background-color: #e0f2fe;
+            border-color: #7dd3fc;
+        }
+
+        .info-card h4 {
+            font-size: 1.05rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card ul {
+            padding-left: 20px;
+            font-size: 0.95rem;
+            color: #4b5563;
+        }
+
+        .info-card li {
+            margin-bottom: 6px;
+        }
+
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .data-table th {
+            background-color: #f3f4f6;
+            color: var(--primary-dark);
+            font-weight: bold;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        /* Karuta Gallery */
+        .karuta-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .search-input, .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .search-input {
+            flex: 1;
+        }
+
+        .karuta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .karuta-item {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            transition: transform 0.2s;
+        }
+
+        .karuta-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .karuta-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .karuta-char {
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .karuta-cat {
+            font-size: 0.75rem;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .karuta-phrase {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #1e1b4b;
+            margin-bottom: 6px;
+        }
+
+        .karuta-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px dashed var(--border-color);
+            padding-top: 4px;
+        }
+
+        /* Quiz Styling */
+        .quiz-card {
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        .quiz-question {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: #111827;
+        }
+
+        .quiz-opt {
+            background: white;
+            border: 1.5px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .quiz-opt:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .quiz-opt.correct {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+            font-weight: bold;
+        }
+
+        .quiz-opt.incorrect {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        .quiz-fb {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: none;
+            font-weight: bold;
+        }
+
+        /* Bottom Controls */
+        footer {
+            background-color: #1f2937;
+            padding: 14px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #374151;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            background-color: #374151;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background-color: #4b5563;
+        }
+
+        .nav-btn.primary {
+            background-color: var(--primary);
+        }
+
+        .nav-btn.primary:hover:not(:disabled) {
+            background-color: #22543d;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .slide-select {
+            background-color: #374151;
+            color: white;
+            border: 1px solid #4b5563;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .key-hint {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .key-badge {
+            background-color: #374151;
+            color: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="site-title">
+            🌱 生物育成の技術 <span>スライド型マスター教材</span>
+        </div>
+        <div class="progress-box">
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <div class="slide-counter">Slide <span id="current-slide-num">1</span> / <span id="total-slide-num">10</span></div>
+        </div>
+    </header>
+
+    <!-- Slide Stage Container -->
+    <main class="stage">
+
+        <!-- Slide 1: Cover -->
+        <div class="slide-wrapper active" id="slide-1">
+            <div class="slide-header">
+                <div class="slide-title">🌾 中学校技術科「生物育成に関する技術」完全学習</div>
+                <div class="slide-tag">導入・概要</div>
+            </div>
+            <div class="slide-body">
+                <div style="text-align: center; padding: 20px 0;">
+                    <div style="font-size: 4rem; margin-bottom: 10px;">🌱🐄🐟</div>
+                    <h1 style="color: var(--primary-dark); font-size: 1.8rem; margin-bottom: 12px;">生物育成の技術 スライド型Web教材</h1>
+                    <p class="lead-text" style="max-width: 700px; margin: 0 auto 24px auto;">
+                        『かるた＋生物育成（鈴木ver.）』の全46個の読み札をもとに、栽培・土壌・肥料・病害虫・畜産・水産養殖の知識をステップ順に学べます。
+                    </p>
+
+                    <div class="grid-2" style="max-width: 800px; margin: 0 auto; text-align: left;">
+                        <div class="info-card green">
+                            <h4>📖 学習の進め方</h4>
+                            <ul>
+                                <li>画面下の<b>「次へ ➔」</b>ボタンまたはキーボードの<b> [→] / [Space] </b>キーで進めます。</li>
+                                <li>各ステップで重要な用語と関連する<b>「かるたの札」</b>を確認しましょう。</li>
+                            </ul>
+                        </div>
+                        <div class="info-card blue">
+                            <h4>🎯 この教材で学べる内容</h4>
+                            <ul>
+                                <li>生物育成の環境要因（気象・土壌・生物）</li>
+                                <li>肥料の三要素（N・P・K）と欠乏症状</li>
+                                <li>播種（種まき）・苗の管理・病害虫IPM防除</li>
+                                <li>畜産（乳牛管理）＆ 水産養殖・未来技術</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Step 1 -->
+        <div class="slide-wrapper" id="slide-2">
+            <div class="slide-header">
+                <div class="slide-title">Step 1：生物育成の基礎と環境要因</div>
+                <div class="slide-tag">気象・土壌・生物</div>
+            </div>
+            <div class="slide-body">
+                <p class="lead-text">作物や家畜・水産物を健やかに育てるには、取り巻く**3つの環境要因**と**土壌の構造**を理解することが重要です。</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>環境要因</th>
+                            <th>主な構成要素</th>
+                            <th>かるたのポイント</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>気象的要因</b></td>
+                            <td>降水量、日照量（日光）、気温、風など</td>
+                            <td>【き】降水量や日照量【ぬ】日光（ぬくもり）が必要</td>
+                        </tr>
+                        <tr>
+                            <td><b>土壌的要因</b></td>
+                            <td>水分、土壌中の養分、空気（通気性）、酸度（pH）</td>
+                            <td>【ど】水や養分など土壌環境を最適化</td>
+                        </tr>
+                        <tr>
+                            <td><b>生物的要因</b></td>
+                            <td>害虫、病原菌、雑草、鳥類など</td>
+                            <td>【せ】鳥や雑草など生物による影響を管理</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="grid-2">
+                    <div class="info-card green">
+                        <h4>🟢 団粒（だんりゅう）構造【かるた：だ】</h4>
+                        <p style="font-size: 0.9rem; color: #374151;">土の粒子が小さな塊（土団子）を形成している状態。隙間（孔隙）が多く、<b>水はけ（排水性）・水もち（保水性）・通気性</b>のすべてに優れている！</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>🔴 単粒（たんりゅう）構造【かるた：み】</h4>
+                        <p style="font-size: 0.9rem; color: #374151;">土の粒子がサラサラと詰まっている状態。隙間が少なく、<b>水はけ（排水性）や通気性が悪くなりやすい</b>ため栽培には工夫が必要。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Step 2 -->
+        <div class="slide-wrapper" id="slide-3">
+            <div class="slide-header">
+                <div class="slide-title">Step 2：栄養管理と肥料の三要素</div>
+                <div class="slide-tag">窒素・リン・カリウム</div>
+            </div>
+            <div class="slide-body">
+                <p class="lead-text">植物の健全な生育には栄養補給が欠かせません。代表的な**肥料の三要素（N・P・K）【ひ】**の役割と欠乏症状をマスターしましょう。</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>要素名</th>
+                            <th>主な役割（働き）</th>
+                            <th>不足（欠乏）したときの症状</th>
+                            <th>かるた</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>窒素（N）</b></td>
+                            <td>葉や茎を大きく育てる（葉肥え）</td>
+                            <td>生育が衰え、葉全体が薄い<b>黄緑色</b>になる</td>
+                            <td>【ち】</td>
+                        </tr>
+                        <tr>
+                            <td><b>リン（P）</b></td>
+                            <td>花や実のつきを良くする（実肥え・花肥え）</td>
+                            <td>成長が遅れ、下葉が<b>青紫色</b>に変色する</td>
+                            <td>【り】</td>
+                        </tr>
+                        <tr>
+                            <td><b>カリウム（K）</b></td>
+                            <td>根の発育を促し病気に強くする（根肥え）</td>
+                            <td>葉の周辺（フチ）が<b>黄色く</b>枯れ込む</td>
+                            <td>【か】</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-card green">
+                    <h4>💡 施肥（肥料の与え方）の分類</h4>
+                    <p style="font-size: 0.9rem; color: #374151;">
+                        ・<b>元肥（もとごえ）【も】：</b> 作物を植え付ける前にあらかじめ土に混ぜ込む基礎肥料。<br>
+                        ・<b>追肥（おいごえ）【お】：</b> 生長に合わせて途中に追加で与える肥料。<br>
+                        ・<b>有機質肥料（たい肥・ふん）【ん】：</b> 家畜のフン等を発酵させた肥料。土の団粒化を促進する！
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Step 3 -->
+        <div class="slide-wrapper" id="slide-4">
+            <div class="slide-header">
+                <div class="slide-title">Step 3：栽培技術・播種（種まき）と苗管理</div>
+                <div class="slide-tag">播種・間引き・苗</div>
+            </div>
+            <div class="slide-body">
+                <p class="lead-text">タネの大きさに合わせた適切なまき方（播種）を選び、発芽後の「間引き」と「良い苗の選別」を行います。</p>
+
+                <div class="grid-2">
+                    <div class="info-card blue">
+                        <h4>🌾 タネの大きさと播種方法</h4>
+                        <ul>
+                            <li><b>ばらまき【ば】：</b> 細かいタネ（コマツナ等）を全体に均一に散布。</li>
+                            <li><b>すじまき【す】：</b> 普通の大きさのタネ（ホウレンソウ等）を列（溝）状にまく。</li>
+                            <li><b>点まき【て】：</b> 大きいタネ（エダマメ等）を一定間隔に数粒ずつまく。</li>
+                        </ul>
+                    </div>
+                    <div class="info-card green">
+                        <h4>🌱 健全な苗の条件と管理</h4>
+                        <ul>
+                            <li><b>良い苗【な】【ね】：</b> 根が白く張り、葉や茎が太く健康なもの。</li>
+                            <li><b>間引き（まびき）【ま】：</b> 混み合った苗を摘み取り、日光や風通しを確保する重要作業。</li>
+                            <li><b>豆苗（スプラウト）【え】【ほ】【む】：</b> エンドウマメの新芽でビタミン豊富！衛生のため加熱調理が基本。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Step 4 -->
+        <div class="slide-wrapper" id="slide-5">
+            <div class="slide-header">
+                <div class="slide-title">Step 4：病害虫対策と連作障害の回避</div>
+                <div class="slide-tag">IPM・輪作・農薬</div>
+            </div>
+            <div class="slide-body">
+                <p class="lead-text">安定した収穫を得るためには、病害虫の早期発見と適切な防除、および輪作による連作障害の予防が必要です。</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>病害虫・障害</th>
+                            <th>特徴と被害状況</th>
+                            <th>対策・回避手法</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>アブラムシ【あ】</b></td>
+                            <td>植物の汁を吸い、ウイルス病を媒介する害虫。</td>
+                            <td>防虫ネット・天敵利用・適切な防除【く】【を】</td>
+                        </tr>
+                        <tr>
+                            <td><b>ハダニ【わ】</b></td>
+                            <td>葉の裏につき、葉の色やツヤを悪くさせる。</td>
+                            <td>早期発見・環境管理</td>
+                        </tr>
+                        <tr>
+                            <td><b>うどんこ病【う】</b></td>
+                            <td>葉に白い粉状の病斑。乾燥条件で被害拡大。</td>
+                            <td>風通しの改善・殺菌</td>
+                        </tr>
+                        <tr>
+                            <td><b>連作障害【れ】</b></td>
+                            <td>同じ科の作物を連続栽培すると生育不良が発生。</td>
+                            <td>年ごとに植える場所を変える<b>「輪作」</b>で回避！</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-card green">
+                    <h4>⚠️ 農薬使用基準の徹底【の】【る】</h4>
+                    <p style="font-size: 0.9rem; color: #374151;">農薬を使用する際は、希釈倍率・散布時期・使用回数などの使用ルール（農薬使用基準）を厳格に守り、安全な生産を心掛けます。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Step 5 -->
+        <div class="slide-wrapper" id="slide-6">
+            <div class="slide-header">
+                <div class="slide-title">Step 5：畜産技術（乳牛の飼育環境）</div>
+                <div class="slide-tag">酪農・家畜衛生</div>
+            </div>
+            <div class="slide-body">
+                <p class="lead-text">家畜（乳牛など）が健康に成長し高品質な生乳を生産できるよう、最適な環境管理とライフサイクルを理解します。</p>
+
+                <div class="grid-2">
+                    <div class="info-card blue">
+                        <h4>🥛 乳牛に必要な水分と環境</h4>
+                        <ul>
+                            <li><b>驚きの水分量【い】：</b> 乳牛は1日に約<b>60〜100L</b>もの大量の水を飲みます。</li>
+                            <li><b>環境の最適化【け】【さ】：</b> ストレスを減らし健康に育てるため、温度・湿度・清掃環境をきめ細かく管理。</li>
+                        </ul>
+                    </div>
+                    <div class="info-card green">
+                        <h4>🐄 乳牛のライフサイクル</h4>
+                        <ul>
+                            <li><b>初産【め】：</b> 牝の乳牛は出生後約<b>2年</b>で子を産みます。</li>
+                            <li><b>搾乳期間【や】：</b> 出産後、約<b>10ヶ月間</b>搾乳が行われます。</li>
+                            <li><b>出荷と感謝【ご】【ら】：</b> 約5〜6年飼育された後は肉用で出荷。酪農家のおかげで毎日牛乳が飲めています！</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Step 6 -->
+        <div class="slide-wrapper" id="slide-7">
+            <div class="slide-header">
+                <div class="slide-title">Step 6：水産養殖と未来の生物育成技術</div>
+                <div class="slide-tag">養殖・植物工場・品種改良</div>
+            </div>
+            <div class="slide-body">
+                <p class="lead-text">食料需要の増加や持続可能な生産のため、水産養殖や完全制御型栽培（植物工場）などの先端技術が大きく発展しています。</p>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>分野・技術</th>
+                            <th>概要と数値データ</th>
+                            <th>かるた</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>水産養殖（育てる漁業）</b></td>
+                            <td>獲る漁業と同じくらいの規模へ拡大。ブリは約55%、ノリ・カキ類は100%が養殖！</td>
+                            <td>【そ】【よ】【ぶ】</td>
+                        </tr>
+                        <tr>
+                            <td><b>植物工場（閉鎖型）</b></td>
+                            <td>室内でLED光・水・養分・温度を完全自動制御し、無農薬で年間を通じて安定生産。</td>
+                            <td>【へ】</td>
+                        </tr>
+                        <tr>
+                            <td><b>品種改良</b></td>
+                            <td>人工交配等によって病気に強い新品種を作り出し、人間の生活向上に貢献。</td>
+                            <td>【じ】【に】</td>
+                        </tr>
+                        <tr>
+                            <td><b>第一次産業の課題</b></td>
+                            <td>農業・畜産・漁業における高齢化と若い労働者・担い手の確保が今後の重要課題。</td>
+                            <td>【ろ】</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 8: Step 7 Karuta Gallery -->
+        <div class="slide-wrapper" id="slide-8">
+            <div class="slide-header">
+                <div class="slide-title">Step 7：『かるた＋生物育成』全46札カード図鑑</div>
+                <div class="slide-tag">インタラクティブ検索</div>
+            </div>
+            <div class="slide-body">
+                <div class="karuta-controls">
+                    <input type="text" id="karuta-search" class="search-input" placeholder="🔍 札・用語・キーワード検索（例：肥料、乳牛、病気）...">
+                    <select id="karuta-filter" class="filter-select">
+                        <option value="all">すべてのテーマ</option>
+                        <option value="土壌・環境">土壌・環境</option>
+                        <option value="肥料・栄養">肥料・栄養</option>
+                        <option value="栽培・播種">栽培・播種</option>
+                        <option value="病害虫・農薬">病害虫・農薬</option>
+                        <option value="畜産・酪農">畜産・酪農</option>
+                        <option value="養殖・先端技術">養殖・先端技術</option>
+                    </select>
+                </div>
+
+                <div class="karuta-grid" id="karuta-container">
+                    <!-- Dynamic Karuta Items -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Step 8 Quiz -->
+        <div class="slide-wrapper" id="slide-9">
+            <div class="slide-header">
+                <div class="slide-title">Step 8：理解度確認チェッククイズ</div>
+                <div class="slide-tag">確認テスト</div>
+            </div>
+            <div class="slide-body">
+                <p class="lead-text">学んだ知識を確認してみましょう！選択肢をクリック（タップ）してください。</p>
+
+                <div class="quiz-card">
+                    <div class="quiz-question">Q1. 植物の葉の周辺（フチ）が黄色く枯れてきた時に不足している肥料成分はどれ？【かるた【か】より】</div>
+                    <div class="quiz-opt" onclick="checkQuiz(this, false, 'q1-fb', '残念！窒素（N）不足は葉全体が黄緑色になります。')">1. 窒素（N）</div>
+                    <div class="quiz-opt" onclick="checkQuiz(this, false, 'q1-fb', '残念！リン（P）不足は下葉が青紫色に変色します。')">2. リン（P）</div>
+                    <div class="quiz-opt" onclick="checkQuiz(this, true, 'q1-fb', '正解！【か】カリウム欠乏は葉のフチが黄色くなります。根の発育にも影響します。')">3. カリウム（K）</div>
+                    <div id="q1-fb" class="quiz-fb"></div>
+                </div>
+
+                <div class="quiz-card">
+                    <div class="quiz-question">Q2. 隙間が多く、水はけ（排水性）・保水性・通気性のすべてに優れている土壌構造はどれ？【かるた【だ】より】</div>
+                    <div class="quiz-opt" onclick="checkQuiz(this, true, 'q2-fb', '正解！【だ】団粒（だんりゅう）構造は土の塊の隙間が多く、作物の育成に最適です！')">1. 団粒（だんりゅう）構造</div>
+                    <div class="quiz-opt" onclick="checkQuiz(this, false, 'q2-fb', '残念！単粒構造は土が詰まっており水はけが悪いです。')">2. 単粒（たんりゅう）構造</div>
+                    <div id="q2-fb" class="quiz-fb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Summary -->
+        <div class="slide-wrapper" id="slide-10">
+            <div class="slide-header">
+                <div class="slide-title">Step 8：まとめ & 次のチャレンジへ</div>
+                <div class="slide-tag">完了</div>
+            </div>
+            <div class="slide-body">
+                <div style="text-align: center; padding: 20px 0;">
+                    <div style="font-size: 3.5rem; margin-bottom: 12px;">🎉🎉🎉</div>
+                    <h2 style="color: var(--primary-dark); margin-bottom: 12px;">学習完了！お疲れ様でした！</h2>
+                    <p class="lead-text" style="max-width: 650px; margin: 0 auto 24px auto;">
+                        「生物育成に関する技術」の基礎知識から、かるたで学ぶポイントまで全ステップの学習が完了しました。
+                    </p>
+
+                    <div class="info-card green" style="max-width: 600px; margin: 0 auto; text-align: left;">
+                        <h4>🌟 学習成果の確認</h4>
+                        <ul>
+                            <li>気象・土壌・生物要因と団粒構造の重要性</li>
+                            <li>肥料の三要素（N・P・K）の役割と欠乏症</li>
+                            <li>適正な播種方法・間引き・輪作・IPM防除</li>
+                            <li>乳牛の水分補給と管理・養殖＆植物工場</li>
+                        </ul>
+                    </div>
+
+                    <button onclick="goToSlide(1)" class="nav-btn primary" style="margin-top: 24px; display: inline-flex;">
+                        🔄 最初からもう一度学ぶ
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Controls -->
+    <footer>
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()">
+            ◀ 前へ
+        </button>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <select id="slide-jump" class="slide-select" onchange="jumpSlide(this.value)">
+                <option value="1">1. 表紙・ガイド</option>
+                <option value="2">2. 生物育成の基礎と環境要因</option>
+                <option value="3">3. 栄養管理と肥料の三要素</option>
+                <option value="4">4. 栽培技術・播種と苗管理</option>
+                <option value="5">5. 病害虫対策と連作障害</option>
+                <option value="6">6. 畜産技術（乳牛の環境）</option>
+                <option value="7">7. 水産養殖と先端技術</option>
+                <option value="8">8. 全46札 かるたカード図鑑</option>
+                <option value="9">9. 理解度確認クイズ</option>
+                <option value="10">10. まとめ</option>
+            </select>
+
+            <span class="key-hint">キーボード: <span class="key-badge">←</span> <span class="key-badge">→</span></span>
+        </div>
+
+        <button class="nav-btn primary" id="next-btn" onclick="nextSlide()">
+            次へ ➔
+        </button>
+    </footer>
+
+    <script>
+        const totalSlides = 10;
+        let currentSlide = 1;
+
+        // Karuta Data
+        const karutaData = [
+            { char: "あ", phrase: "ぶらむし / しょくぶつのしるを / すういやなやつ", category: "病害虫・農薬", detail: "アブラムシの吸汁被害" },
+            { char: "い", phrase: "ちにちに / ６０～１００Lの水 / 乳牛にはひつよう", category: "畜産・酪農", detail: "乳牛の1日の必要水量" },
+            { char: "う", phrase: "どんこ病 / 乾燥状況で / 被害拡大・・・", category: "病害虫・農薬", detail: "うどんこ病の発生条件" },
+            { char: "え", phrase: "んどうまめの / しんめは / とうみょうのこと", category: "栽培・播種", detail: "エンドウマメの新芽＝豆苗" },
+            { char: "お", phrase: "いごえは / もとごえのあとに / ついかするひりょう", category: "肥料・栄養", detail: "追肥の追加タイミング" },
+            { char: "か", phrase: "りうむけつぼう / 葉の周辺が / 黄色になる", category: "肥料・栄養", detail: "カリウム（K）欠乏の症状" },
+            { char: "き", phrase: "しょうてき / よういんはこうすいりょう / にっしゃりょうなど", category: "土壌・環境", detail: "気象的要因" },
+            { char: "く", phrase: "じょしていこう / 植物にとって / ゆうがいな虫を", category: "病害虫・農薬", detail: "害虫駆除と抵抗性" },
+            { char: "け", phrase: "んこうな牛を / そだてるために / 環境をよくしよう", category: "畜産・酪農", detail: "家畜の健康環境管理" },
+            { char: "ご", phrase: "～６年 / 乳牛を飼育した後 / 肉用で出荷", category: "畜産・酪農", detail: "乳牛の飼育期間と出荷" },
+            { char: "さ", phrase: "いてきな / かんきょうをようい / かちくのため", category: "畜産・酪農", detail: "最適飼育環境" },
+            { char: "じ", phrase: "んこうてきに / つくりだすよ / 品種改良", category: "養殖・先端技術", detail: "品種改良技術" },
+            { char: "す", phrase: "じまきは / ふつうのおおきさの / たねにする", category: "栽培・播種", detail: "すじまき（中粒種子）" },
+            { char: "せ", phrase: "いぶつてき / よういんはとりや / ざっそうなど", category: "土壌・環境", detail: "生物的要因" },
+            { char: "そ", phrase: "だてる / 漁業の量は / とる漁業と同じくらい", category: "養殖・先端技術", detail: "水産養殖の規模" },
+            { char: "だ", phrase: "んりゅう / こうぞうはすきまが / おおいから良い", category: "土壌・環境", detail: "団粒構造のメリット" },
+            { char: "ち", phrase: "っそのけつぼう / せいいくおとろえ / 葉は黄緑色に", category: "肥料・栄養", detail: "窒素（N）欠乏の症状" },
+            { char: "つ", phrase: "ゆの時期に / 発生しやすい / 植物の病気", category: "病害虫・農薬", detail: "梅雨期の多湿病害" },
+            { char: "て", phrase: "んまきは / おおきいたねに / しようする", category: "栽培・播種", detail: "点まき（大粒種子）" },
+            { char: "ど", phrase: "じょうてき / よういんはみずや / ようぶんなど", category: "土壌・環境", detail: "土壌的要因" },
+            { char: "な", phrase: "えのよさは / 葉と茎と根で / みわける", category: "栽培・播種", detail: "良い苗の見分け方" },
+            { char: "に", phrase: "んげんの / せいかつこうじょう / 品種改良", category: "養殖・先端技術", detail: "品種改良の目的" },
+            { char: "ぬ", phrase: "くもりたいせつ / しょくぶつには / にっこうを", category: "土壌・環境", detail: "日光と保温" },
+            { char: "ね", phrase: "のいろがしろく / 葉や茎が太い / よいなえです", category: "栽培・播種", detail: "健全な苗の条件" },
+            { char: "の", phrase: "うやくは / のうやくしようきじゅん / まもろう", category: "病害虫・農薬", detail: "農薬使用基準" },
+            { char: "ば", phrase: "らまきは / こまかいたねに / しようする", category: "栽培・播種", detail: "ばらまき（微細種子）" },
+            { char: "ひ", phrase: "りょうのさんようそ / カリウム・リン / 窒素", category: "肥料・栄養", detail: "肥料の三要素（N・P・K）" },
+            { char: "ぶ", phrase: "りは５５％ / ノリやカキ類は１００％ / 養殖です", category: "養殖・先端技術", detail: "水産物の養殖割合" },
+            { char: "へ", phrase: "いさてきに / そだてる方法 / 植物工場", category: "養殖・先端技術", detail: "完全制御型植物工場" },
+            { char: "ほ", phrase: "うふに / ビタミンあるよ / とうみょう", category: "栽培・播種", detail: "豆苗のビタミン" },
+            { char: "ま", phrase: "びきは / なえをへらす / さぎょうのこと", category: "栽培・播種", detail: "間引き作業" },
+            { char: "み", phrase: "ずはけ / 悪い / 単粒構造", category: "土壌・環境", detail: "単粒構造のデメリット" },
+            { char: "む", phrase: "りして生で / たべないで / とうみょう", category: "栽培・播種", detail: "スプラウト生食注意" },
+            { char: "め", phrase: "すのにゅうぎゅう / しゅっせいご / 2年で子を産む", category: "畜産・酪農", detail: "乳牛の初産年齢" },
+            { char: "も", phrase: "とごえは / じぜんにいれる / ひりょうのこと", category: "肥料・栄養", detail: "元肥の概念" },
+            { char: "や", phrase: "く十か月 / さくにゅうをする / にゅうぎゅう", category: "畜産・酪農", detail: "乳牛の搾乳期間" },
+            { char: "ゆ", phrase: "うがいな / びょうがいちゅうの / たいさくしっかり", category: "病害虫・農薬", detail: "病害虫対策" },
+            { char: "よ", phrase: "うしょくは / にんげんがそだてる / すいさんせいぶつを", category: "養殖・先端技術", detail: "水産養殖の定義" },
+            { char: "ら", phrase: "くのう家 / のおかげで牛乳 / 飲めている", category: "畜産・酪農", detail: "酪農家への感謝" },
+            { char: "り", phrase: "んのけつぼう / 下葉が / 青紫色に", category: "肥料・栄養", detail: "リン（P）欠乏の症状" },
+            { char: "る", phrase: "ーるをまもって / のうやくつかおう / のうやくしようきじゅん", category: "病害虫・農薬", detail: "農薬使用ルール" },
+            { char: "れ", phrase: "んさくしょうがい / 輪作で / 回避しよう！", category: "病害虫・農薬", detail: "連作障害と輪作" },
+            { char: "ろ", phrase: "うどう者 / 若い人がほしい / 農・畜産・漁業", category: "養殖・先端技術", detail: "第一次産業の課題" },
+            { char: "わ", phrase: "るくなる / いろつきやつやが / ハダニのせいで", category: "病害虫・農薬", detail: "ハダニ被害" },
+            { char: "を", phrase: "病害虫を / 適切な方法で / 防除しよう", category: "病害虫・農薬", detail: "適切な防除（IPM）" },
+            { char: "ん", phrase: "うんちは / ひりょうになる / すごいやつ", category: "肥料・栄養", detail: "家畜排泄物の堆肥利用" }
+        ];
+
+        function updateSlideUI() {
+            // Hide all slides
+            document.querySelectorAll('.slide-wrapper').forEach((el, index) => {
+                el.classList.remove('active');
+                if (index + 1 === currentSlide) {
+                    el.classList.add('active');
+                }
+            });
+
+            // Update Counter & Progress Bar
+            document.getElementById('current-slide-num').textContent = currentSlide;
+            const progressPct = (currentSlide / totalSlides) * 100;
+            document.getElementById('progress-fill').style.width = progressPct + '%';
+
+            // Update Select Dropdown
+            document.getElementById('slide-jump').value = currentSlide;
+
+            // Update Buttons disabled status
+            document.getElementById('prev-btn').disabled = (currentSlide === 1);
+            document.getElementById('next-btn').disabled = (currentSlide === totalSlides);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlideUI();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlideUI();
+            }
+        }
+
+        function goToSlide(num) {
+            currentSlide = num;
+            updateSlideUI();
+        }
+
+        function jumpSlide(val) {
+            currentSlide = parseInt(val, 10);
+            updateSlideUI();
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Karuta Render & Filter
+        function renderKaruta(items) {
+            const container = document.getElementById('karuta-container');
+            container.innerHTML = '';
+
+            if (items.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 20px;">該当する札が見つかりませんでした。</p>';
+                return;
+            }
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'karuta-item';
+                card.innerHTML = `
+                    <div class="karuta-head">
+                        <div class="karuta-char">${item.char}</div>
+                        <div class="karuta-cat">${item.category}</div>
+                    </div>
+                    <div class="karuta-phrase">${item.phrase}</div>
+                    <div class="karuta-desc">${item.detail}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterKaruta() {
+            const searchText = document.getElementById('karuta-search').value.toLowerCase();
+            const categoryText = document.getElementById('karuta-filter').value;
+
+            const filtered = karutaData.filter(item => {
+                const matchesSearch = item.char.includes(searchText) || 
+                                      item.phrase.toLowerCase().includes(searchText) || 
+                                      item.detail.toLowerCase().includes(searchText) ||
+                                      item.category.toLowerCase().includes(searchText);
+                const matchesCategory = categoryText === 'all' || item.category === categoryText;
+                return matchesSearch && matchesCategory;
+            });
+
+            renderKaruta(filtered);
+        }
+
+        document.getElementById('karuta-search').addEventListener('input', filterKaruta);
+        document.getElementById('karuta-filter').addEventListener('change', filterKaruta);
+
+        // Quiz Logic
+        function checkQuiz(element, isCorrect, feedbackId, text) {
+            const parent = element.parentElement;
+            const options = parent.querySelectorAll('.quiz-opt');
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+
+            const fb = document.getElementById(feedbackId);
+            fb.style.display = 'block';
+            fb.innerHTML = text;
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                fb.style.backgroundColor = '#d1fae5';
+                fb.style.color = '#065f46';
+            } else {
+                element.classList.add('incorrect');
+                fb.style.backgroundColor = '#fee2e2';
+                fb.style.color = '#991b1b';
+            }
+        }
+
+        // Initialize
+        renderKaruta(karutaData);
+        updateSlideUI();
+    </script>
+</body>
+</html>
